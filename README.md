@@ -1,1 +1,1 @@
-# 3d_Avatar
+저의 3d 아바타를 이용한 portfolio입니다. 👩
