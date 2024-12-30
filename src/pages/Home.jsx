@@ -5,8 +5,43 @@ import { skills, experiences } from '../constans';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import CTA from '../components/CTA';
+import { useEffect, useState } from 'react';
 
 const Home = () => {
+  const [timelineKey, setTimelineKey] = useState(0); // 타임라인 렌더링 상태
+  const [isVisible, setIsVisible] = useState(false); // 타임라인 섹션 가시 상태
+
+  useEffect(() => {
+    const handleScroll = () => {
+      console.log('scroll evnetn')
+      const timelineSection = document.getElementById("timeline-section");
+      if (!timelineSection) return; // 요소가 없으면 리턴
+      // console.log("timelineSection:", timelineSection);
+      const rect = timelineSection.getBoundingClientRect();
+      console.log("rect:", rect);
+
+      const sectionVisible =
+        rect.top <= window.innerHeight * 0.5 && rect.bottom >= window.innerHeight * 0.5;
+
+      console.log("sectionVisible:", sectionVisible);
+
+      if (sectionVisible) {
+       // if (!isVisible) {
+          setIsVisible(true);
+          setTimelineKey((prevKey) => prevKey + 1); // key 갱신
+          console.log("Set isVisible to true");
+       // }
+      } else {
+       // if (isVisible) {
+          setIsVisible(false);
+          console.log("Set isVisible to false");
+       // }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll); // cleanup
+  }, [isVisible]);
   return (
     // <div className="bg-[#f7f7f7] min-h-screen">
     <div className="max-container">
@@ -77,8 +112,8 @@ const Home = () => {
         </div>
 
         {/* 타임라인 */}
-        <div className="mt-12 flex">
-          <VerticalTimeline className="before:bg-timeline-line" >
+        <div className="mt-12 flex"  id="timeline-section">
+          <VerticalTimeline className="before:bg-timeline-line">
             {experiences.map((experience) => (
               <VerticalTimelineElement
                 key={experience.company_name}
